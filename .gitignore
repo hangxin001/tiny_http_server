@@ -343,3 +343,6 @@ healthchecksdb
 *.sln
 *.vcxproj
 *.vcxproj.*
+bin/
+obj/
+.vs/
