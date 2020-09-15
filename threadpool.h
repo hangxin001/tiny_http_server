@@ -1,4 +1,6 @@
-#pragma once
+#ifndef __THREADPOOL_H__
+#define __THREADPOOL_H__
+
 #include<vector>
 #include<deque>
 #include<mutex>
@@ -22,3 +24,6 @@ private:
 
 };
 
+
+
+#endif 
