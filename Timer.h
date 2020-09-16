@@ -40,13 +40,7 @@ public:
 	void tick();		//心跳函数
 	int getExpireTime();  //获取超时时间
 
-	/////debug/////
-	Timer* getTop() { 
-		if (!_mangerQueue.empty())
-			return _mangerQueue.top();
-		else
-			return nullptr;
-	};
+
 
 private:	
 	std::priority_queue <Timer *, std::vector<Timer *>,TimerCmp> _mangerQueue;  //Timer重载<,生成最小堆
