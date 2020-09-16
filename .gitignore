@@ -346,3 +346,6 @@ healthchecksdb
 bin/
 obj/
 .vs/
+
+# Test File
+test.cpp
