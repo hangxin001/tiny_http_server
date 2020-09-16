@@ -14,7 +14,7 @@ void TimerManager::delTimer(Timer* timer) {
 		return;
 	}
 	{
-		std::unique_lock<std::mutex> lock(lock_);	//Ó¦¸Ã¿ÉÒÔ²»ÓÃÉÏËø£¬²»¹ıÏÈÉÏ¸öËø¿´¿´
+		std::unique_lock<std::mutex> lock(lock_);	//åº”è¯¥å¯ä»¥ä¸ç”¨ä¸Šé”ï¼Œä¸è¿‡å…ˆä¸Šä¸ªé”çœ‹çœ‹
 		timer->setUsed(false);
 	}
 }
@@ -32,7 +32,7 @@ void TimerManager::tick() {
 				delete delTimer;
 				continue;
 			}
-			if (std::chrono::duration_cast<MS>(mangerQueue_.top()->getExpireTime() - nowTime_).count() > 0)   //Ã»ÓĞ³¬Ê±
+			if (std::chrono::duration_cast<MS>(mangerQueue_.top()->getExpireTime() - nowTime_).count() > 0)   //æ²¡æœ‰è¶…æ—¶
 				return;
 
 			mangerQueue_.top()->runTimeOutFunction();
