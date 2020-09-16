@@ -1,4 +1,4 @@
-#include "threadpool.h"
+#include "Threadpool.h"
 
 ThreadPool::ThreadPool(int maxWork):_stop(false){
     maxWork <=0 ? maxWork = 1 : maxWork;
