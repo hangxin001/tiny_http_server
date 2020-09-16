@@ -26,8 +26,8 @@ private:
 	bool _used;  
 };
 struct TimerCmp {
-	bool operator()(Timer a, Timer b) {
-		return (a.getExpireTime() > b.getExpireTime());
+	bool operator()(Timer *a, Timer *b) {
+		return (a->getExpireTime() > b->getExpireTime());
 	}
 };
 class TimerManager {
@@ -35,13 +35,21 @@ public:
 	TimerManager() :_nowTime(Clock::now()) {};
 	~TimerManager();
 	void updateTime() { _nowTime = Clock::now(); };
-	void addTimer(const int &time , TimeOutFuction timeOutFun);
-	void delTimer(Timer &timer); //因为优先队列只能删除顶部，使用惰性删除，减少开销
+	Timer* addTimer(const int &time , TimeOutFuction timeOutFun);   //返回引用 还是指针 是个问题
+	void delTimer(Timer *timer); //因为优先队列只能删除顶部，使用惰性删除，减少开销,真正删除在tick()和getExpireTime()
 	void tick();		//心跳函数
-	int getExpireTime();  //获取超时时间，真正的删除函数,返回单位为ms
+	int getExpireTime();  //获取超时时间
+
+	/////debug/////
+	Timer* getTop() { 
+		if (!_mangerQueue.empty())
+			return _mangerQueue.top();
+		else
+			return nullptr;
+	};
 
 private:	
-	std::priority_queue <Timer, std::vector<Timer>,TimerCmp> _mangerQueue;  //Timer重载<,生成最小堆
+	std::priority_queue <Timer *, std::vector<Timer *>,TimerCmp> _mangerQueue;  //Timer重载<,生成最小堆
 	TimePoint _nowTime;
 	std::mutex _lock;		
 };
