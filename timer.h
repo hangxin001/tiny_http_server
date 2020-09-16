@@ -35,15 +35,15 @@ public:
 	TimerManager() :nowTime_(Clock::now()) {};
 	~TimerManager();
 	void updateTime() { nowTime_ = Clock::now(); };
-	Timer* addTimer(const int &time , TimeOutFuction timeOutFun);   //·µ»ØÒýÓÃ »¹ÊÇÖ¸Õë ÊÇ¸öÎÊÌâ
-	void delTimer(Timer *timer); //ÒòÎªÓÅÏÈ¶ÓÁÐÖ»ÄÜÉ¾³ý¶¥²¿£¬Ê¹ÓÃ¶èÐÔÉ¾³ý£¬¼õÉÙ¿ªÏú,ÕæÕýÉ¾³ýÔÚtick()ºÍgetExpireTime()
-	void tick();		//ÐÄÌøº¯Êý
-	int getExpireTime();  //»ñÈ¡³¬Ê±Ê±¼ä
+	Timer* addTimer(const int &time , TimeOutFuction timeOutFun);   //è¿”å›žå¼•ç”¨ è¿˜æ˜¯æŒ‡é’ˆ æ˜¯ä¸ªé—®é¢˜
+	void delTimer(Timer *timer); //å› ä¸ºä¼˜å…ˆé˜Ÿåˆ—åªèƒ½åˆ é™¤é¡¶éƒ¨ï¼Œä½¿ç”¨æƒ°æ€§åˆ é™¤ï¼Œå‡å°‘å¼€é”€,çœŸæ­£åˆ é™¤åœ¨tick()å’ŒgetExpireTime()
+	void tick();		//å¿ƒè·³å‡½æ•°
+	int getExpireTime();  //èŽ·å–è¶…æ—¶æ—¶é—´
 
 
 
 private:	
-	std::priority_queue <Timer *, std::vector<Timer *>,TimerCmp> mangerQueue_;  //TimerÖØÔØ<,Éú³É×îÐ¡¶Ñ
+	std::priority_queue <Timer *, std::vector<Timer *>,TimerCmp> mangerQueue_;  //Timeré‡è½½<,ç”Ÿæˆæœ€å°å †
 	TimePoint nowTime_;
 	std::mutex lock_;		
 };
