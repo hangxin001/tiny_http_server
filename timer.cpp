@@ -1,5 +1,4 @@
 #include"timer.h"
-#include<memory>
 std::shared_ptr<Timer> TimerManager::addTimer(const int& time, TimeOutFuction timeOutFun) {
 	std::shared_ptr<Timer> timer = std::make_shared<Timer>(nowTime_ + MS(time), timeOutFun);
 	{

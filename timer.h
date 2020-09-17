@@ -40,6 +40,12 @@ public:
 	void tick();		//心跳函数
 	int getExpireTime();  //获取超时时间
 
+	//debug
+	std::shared_ptr<Timer> getTop() { 
+		if (mangerQueue_.empty())
+			return nullptr;
+		return mangerQueue_.top(); };
+
 private:	
 	std::priority_queue <std::shared_ptr<Timer>, std::vector<std::shared_ptr<Timer>>,TimerCmp> mangerQueue_;  //Timer重载<,生成最小堆
 	TimePoint nowTime_;
