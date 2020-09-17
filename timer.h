@@ -12,9 +12,9 @@ using TimePoint = Clock::time_point;
 class Timer {
 public:
 	Timer(const TimePoint &t , TimeOutFuction timeOutFun) : expireTime_(t), timeOutFuction_(timeOutFun),
-			_used(true){};
-	void setUsed(bool used) { _used = used; };
-	bool isUsed() const { return _used; };
+			used_(true){};
+	void setUsed(bool used) { used_ = used; };
+	bool isUsed() const { return used_; };
 	void runTimeOutFunction() const { timeOutFuction_(); };
 	TimePoint getExpireTime() const { return expireTime_; };
 	bool operator<(const Timer& a) {
@@ -23,7 +23,7 @@ public:
 private:
 	TimePoint expireTime_;
 	TimeOutFuction timeOutFuction_;
-	bool _used;  
+	bool used_;  
 };
 struct TimerCmp {
 	bool operator()(Timer *a, Timer *b) {
