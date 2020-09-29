@@ -23,7 +23,11 @@ public:
 
 	Buffer() :buffer_(CHEAP_PREPEND + INIT_SIZE), readIndex_(CHEAP_PREPEND), writerIndex_(CHEAP_PREPEND) {};
 	~Buffer() {};
-	
+
+	ssize_t readFd(int fd);  //将数据从fd移到buffer
+	ssize_t writeFd(int fd);  //将buffer数据发送给fd，
+
+
 	size_t readableBytes() const {		//可读空间数量
 		return writerIndex_ - readIndex_;
 	}
@@ -42,6 +46,9 @@ public:
 	const char* peek() const {		//返回第一个可读指针
 		return begin() + readIndex_;
 	}
+	char * beginWrite(){
+		return begin() + writerIndex_;
+	}
 	const char* beginWrite() const {
 		return begin() + writerIndex_;
 	}
@@ -57,7 +64,41 @@ public:
 		const char* crlf = std::search(start, beginWrite(), CRLF, CRLF + 2);
 		return crlf == beginWrite() ? nullptr : crlf;
 	}
-	void append();
+	void retrieve(size_t length){		//readIndex后移,取出length长度
+		if(readableBytes() >= length)
+			readIndex_ += length;
+		else
+			retrieveAll();			//超过则直接取出全部
+		
+	}
+	void retrieveAll(){
+		readIndex_ = CHEAP_PREPEND;
+		writerIndex_ = CHEAP_PREPEND;
+	}
+	std::string retrieveAsString(){
+		std::string str(peek(),readableBytes()); //使用构造string (const char* s, size_t n);
+		retrieveAll();
+		return str;
+	}
+	void hasWrite(size_t length){
+		writerIndex_ += length;
+	}
+	void ensureWriterableBytes(size_t length){
+		if(length < writrableBytes())
+			makeSpace(length);
+	}
+	void append(const char* str, size_t length){
+		ensureWriterableBytes(length);
+		std::copy(str,str+length,beginWrite());
+		hasWrite(length);
+	}
+	void append(std::string str){
+		append(str.data(),str.length());	//data() 返回的指针则保证指向一个size()长度的空间
+	}
+	void append(Buffer other){
+		append(other.peek(),other.readableBytes());
+	}
+
 
 private:
 	char* begin() {
@@ -72,7 +113,7 @@ private:
 		}
 		else {  //将以读过的数据覆盖。
 			size_t readable = readableBytes();
-			std::copy(peek(), beginWrite(), begin() + CHEAP_PREPEND);
+			std::copy(begin()+readIndex_, begin()+ writerIndex_, begin() + CHEAP_PREPEND);
 			readIndex_ = CHEAP_PREPEND;
 			writerIndex_ = readIndex_ + readable;
 
