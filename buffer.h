@@ -4,7 +4,7 @@
 #include<vector>
 #include <algorithm>
 #include<assert.h>
-/// ²Î¿¼ÁËmuduoµÄbufferÉè¼Æ
+/// å‚è€ƒäº†muduoçš„bufferè®¾è®¡
 /// www.cnblogs.com/solstice/archive/2011/04/17/2018801.htmls
 /// A buffer class modeled after org.jboss.netty.buffer.ChannelBuffer
 ///
@@ -18,19 +18,19 @@
 /// @endcode
 class Buffer {
 public:
-	static const size_t CHEAP_PREPEND = 8;   //ÎªprependÔ¤Áô¿Õ¼ä
+	static const size_t CHEAP_PREPEND = 8;   //ä¸ºprependé¢„ç•™ç©ºé—´
 	static const size_t INIT_SIZE = 1024;
 
 	Buffer() :buffer_(CHEAP_PREPEND + INIT_SIZE), readIndex_(CHEAP_PREPEND), writerIndex_(CHEAP_PREPEND) {};
 	~Buffer() {};
 	
-	size_t readableBytes() const {		//¿É¶Á¿Õ¼äÊıÁ¿
+	size_t readableBytes() const {		//å¯è¯»ç©ºé—´æ•°é‡
 		return writerIndex_ - readIndex_;
 	}
-	size_t writrableBytes() const {		//¿ÉĞ´¿Õ¼äÊıÁ¿
+	size_t writrableBytes() const {		//å¯å†™ç©ºé—´æ•°é‡
 		return buffer_.size() - writerIndex_;
 	}
-	size_t prependableBytes() const {		//ºÜ°ôµÄÏë·¨£¬¿ÉÏ§Õâ¸öÏîÄ¿ÓÃ²»ÉÏ
+	size_t prependableBytes() const {		//å¾ˆæ£’çš„æƒ³æ³•ï¼Œå¯æƒœè¿™ä¸ªé¡¹ç›®ç”¨ä¸ä¸Š
 		return readIndex_;
 	}
 
@@ -39,7 +39,7 @@ public:
 		std::swap(readIndex_, rhs.readIndex_);
 		std::swap(writerIndex_, rhs.writerIndex_);
 	}
-	const char* peek() const {		//·µ»ØµÚÒ»¸ö¿É¶ÁÖ¸Õë
+	const char* peek() const {		//è¿”å›ç¬¬ä¸€ä¸ªå¯è¯»æŒ‡é’ˆ
 		return begin() + readIndex_;
 	}
 	const char* beginWrite() const {
@@ -52,7 +52,7 @@ public:
 		return crlf == beginWrite() ? nullptr : crlf;
 	}
 	const char* findCRLF(const char* start) const {
-		assert(start < begin());  //Ô½½ç
+		assert(start < begin());  //è¶Šç•Œ
 		const char CRLF[] = "\n\r";
 		const char* crlf = std::search(start, beginWrite(), CRLF, CRLF + 2);
 		return crlf == beginWrite() ? nullptr : crlf;
@@ -70,7 +70,7 @@ private:
 		if (writrableBytes() + prependableBytes() < length + CHEAP_PREPEND) {
 			buffer_.resize(length + writrableBytes());
 		}
-		else {  //½«ÒÔ¶Á¹ıµÄÊı¾İ¸²¸Ç¡£
+		else {  //å°†ä»¥è¯»è¿‡çš„æ•°æ®è¦†ç›–ã€‚
 			size_t readable = readableBytes();
 			std::copy(peek(), beginWrite(), begin() + CHEAP_PREPEND);
 			readIndex_ = CHEAP_PREPEND;
