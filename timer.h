@@ -17,9 +17,7 @@ public:
 	bool isUsed() const { return used_; };
 	void runTimeOutFunction() const { timeOutFuction_(); };
 	TimePoint getExpireTime() const { return expireTime_; };
-	bool operator<(const Timer& a) {
-		return (expireTime_ < a.getExpireTime());
-	}
+	
 private:
 	TimePoint expireTime_;
 	TimeOutFuction timeOutFuction_;
@@ -42,7 +40,7 @@ public:
 
 
 private:	
-	std::priority_queue <std::shared_ptr<Timer>, std::vector<std::shared_ptr<Timer>>,TimerCmp> mangerQueue_;  //Timer重载<,生成最小堆
+	std::priority_queue <std::shared_ptr<Timer>, std::vector<std::shared_ptr<Timer>>,TimerCmp> mangerQueue_;  //重载仿函数,生成最小堆
 	TimePoint nowTime_;
 	std::mutex lock_;		
 };
