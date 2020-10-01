@@ -2,8 +2,10 @@
 #include<iostream>
 #include<string>
 #include<vector>
-#include <algorithm>
+#include<algorithm>
 #include<assert.h>
+#include<sys/uio.h>
+#include<unistd.h>
 /// 参考了muduo的buffer设计
 /// www.cnblogs.com/solstice/archive/2011/04/17/2018801.htmls
 /// A buffer class modeled after org.jboss.netty.buffer.ChannelBuffer
@@ -25,7 +27,7 @@ public:
 	~Buffer() {};
 
 	ssize_t readFd(int fd);  //将数据从fd移到buffer
-	ssize_t writeFd(int fd);  //将buffer数据发送给fd，
+	ssize_t writeFd(int fd);  //将buffer数据发送给fd
 
 
 	size_t readableBytes() const {		//可读空间数量
