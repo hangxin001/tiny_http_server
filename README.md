@@ -7,6 +7,7 @@ a tiny http server
 特性：
  - Reactor模型
  - 多路复用
+ - 支持HTTP1.0
  - 可自动增长的缓冲区（参考了muduo的buffer）
  - 基于priority_queue与shared_prt的应用层定时器
 
