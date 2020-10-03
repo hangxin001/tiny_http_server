@@ -12,7 +12,7 @@ a tiny http server
  - 基于priority_queue与shared_prt的应用层定时器
 
 NOW CODING
-- [ ] Epoll
+- [X] Epoll
 
 - [X] Thread Pool
 
