@@ -8,7 +8,7 @@
 #include"httpRequest.h"
 class Epoll {
 public:
-	static const int MAXCONNECT = 65536;
+	static const int MAXCONNECT = 4096;
 	Epoll();
 	~Epoll();
 	using NewConnetCallback = std::function<void()>;

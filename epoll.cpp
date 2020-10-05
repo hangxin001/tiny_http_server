@@ -63,7 +63,7 @@ void Epoll::eventTrick(int serverFd, ThreadPool& T, int eventsSum) {
 		}
 		else {
 			//debug
-			std::cout << "EventTrick:bad events" << std::endl;
+			std::cout << "EventTrick: fd "<< reRequest->getFd() << " bad events" << std::endl;
 			;
 		}
 	}
