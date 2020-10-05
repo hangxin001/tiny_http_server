@@ -60,11 +60,19 @@ public:
 		const char* crlf = std::search(peek(), beginWrite(), CRLF, CRLF + 2);
 		return crlf == beginWrite() ? nullptr : crlf;
 	}
-	const char* findCRLF(const char* start) const {
+	const char* findCRLF(const char* start) const {		//寻找下一个CRLF
 		assert(start < begin());  //越界
 		const char CRLF[] = "\n\r";
 		const char* crlf = std::search(start, beginWrite(), CRLF, CRLF + 2);
 		return crlf == beginWrite() ? nullptr : crlf;
+	}
+	std::string retrieveUntilCRLFAsString(const char* starts) {		//取出到下一个CRLF之前的数据，并丢弃CRLF
+		const char* CRLF = findCRLF();
+		if (CRLF == nullptr ||starts < beginWrite())									
+			return std::string();
+		std::string str(peek(), CRLF - 1);
+		retrieve(CRLF + 1 - starts);
+		return str;
 	}
 	void retrieve(size_t length){		//readIndex后移,取出length长度
 		if(readableBytes() >= length)
@@ -77,7 +85,14 @@ public:
 		readIndex_ = CHEAP_PREPEND;
 		writerIndex_ = CHEAP_PREPEND;
 	}
-	std::string retrieveAsString(){
+	std::string retrieveAsString(size_t length) {
+		if (readIndex_ + length > writerIndex_)
+			return std::string();		//错误即返回空string
+		std::string str(peek(), peek() + length);
+		retrieve(length);
+		return str;
+	}
+	std::string retrieveAllAsString(){
 		std::string str(peek(),readableBytes()); //使用构造string (const char* s, size_t n);
 		retrieveAll();
 		return str;
