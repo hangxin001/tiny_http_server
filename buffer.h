@@ -66,12 +66,12 @@ public:
 		const char* crlf = std::search(start, beginWrite(), CRLF, CRLF + 2);
 		return crlf == beginWrite() ? nullptr : crlf;
 	}
-	std::string retrieveUntilCRLFAsString(const char* starts) {		//取出到下一个CRLF之前的数据，并丢弃CRLF
+	std::string retrieveUntilCRLFAsString() {		//取出到下一个CRLF之前的数据，并丢弃CRLF
 		const char* CRLF = findCRLF();
-		if (CRLF == nullptr ||starts < beginWrite())									
+		if (CRLF == nullptr )									
 			return std::string();
 		std::string str(peek(), CRLF - 1);
-		retrieve(CRLF + 1 - starts);
+		retrieve(CRLF + 2 - peek());
 		return str;
 	}
 	void retrieve(size_t length){		//readIndex后移,取出length长度
