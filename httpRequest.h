@@ -73,4 +73,7 @@ private:
 	std::string path_;	//请求路径
 	std::string query_;	//暂时不打算处理动态请求
 	std::unordered_map<std::string, std::string> headers_;
+
+	bool parseRequestLine();
+	bool parseRequestHead();
 };
