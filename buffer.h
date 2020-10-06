@@ -56,20 +56,24 @@ public:
 	}
 	
 	const char* findCRLF() const{
-		const char CRLF[] = "\n\r";
+		const char CRLF[] = "\r\n";
 		const char* crlf = std::search(peek(), beginWrite(), CRLF, CRLF + 2);
 		return crlf == beginWrite() ? nullptr : crlf;
 	}
 	const char* findCRLF(const char* start) const {		//寻找下一个CRLF
 		assert(start < begin());  //越界
-		const char CRLF[] = "\n\r";
+		const char CRLF[] = "\r\n";
 		const char* crlf = std::search(start, beginWrite(), CRLF, CRLF + 2);
 		return crlf == beginWrite() ? nullptr : crlf;
 	}
-	std::string retrieveUntilCRLFAsString() {		//取出到下一个CRLF之前的数据，并丢弃CRLF
+	std::string retrieveUntilCRLFAsString() {		//取出到下一个CRLF之前的数据，并丢弃CRLF，string性能拉跨，废弃
 		const char* CRLF = findCRLF();
-		if (CRLF == nullptr )									
+		if (CRLF == nullptr)
 			return std::string();
+		else if (peek() == CRLF) {
+			retrieve(CRLF + 2 - peek());
+			return std::string();
+		}
 		std::string str(peek(), CRLF - 1);
 		retrieve(CRLF + 2 - peek());
 		return str;
