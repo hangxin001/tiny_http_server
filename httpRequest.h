@@ -22,8 +22,8 @@ public:
 		HTTP11
 	};
 	HttpRequest(int fd);
-	int recv();		//接收inBuffer数据
-	int send();		//发送outBuffer数据
+	int recv(int* savedError);		//接收inBuffer数据
+	int send(int* savedError);		//发送outBuffer数据
 	void appendReponse(const Buffer& buffer);
 	void appendInBuffer(const std::string& str);
 	bool parseRequest();

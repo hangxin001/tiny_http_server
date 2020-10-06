@@ -26,8 +26,8 @@ public:
 	Buffer() :buffer_(CHEAP_PREPEND + INIT_SIZE), readIndex_(CHEAP_PREPEND), writerIndex_(CHEAP_PREPEND) {};
 	~Buffer() {};
 
-	ssize_t readFd(int fd);  //将数据从fd移到buffer
-	ssize_t writeFd(int fd);  //将buffer数据发送给fd
+	ssize_t readFd(int fd, int* savedError);  //将数据从fd移到buffer
+	ssize_t writeFd(int fd, int* savedError);  //将buffer数据发送给fd
 
 
 	size_t readableBytes() const {		//可读空间数量

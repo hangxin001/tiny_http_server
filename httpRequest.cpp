@@ -2,11 +2,11 @@
 HttpRequest::HttpRequest(int fd) : fd_(fd), working_(false), timer_(nullptr), version_(unKnown),
 method_(Invaild), parseStatus_(RequestLine) {};
 
-int HttpRequest::recv() {
-	return inputBuffer_.readFd(fd_);
+int HttpRequest::recv(int* savedError) {
+	return inputBuffer_.readFd(fd_,savedError);
 }
-int HttpRequest::send() {
-	return outputBuffer_.writeFd(fd_);
+int HttpRequest::send(int* savedError) {
+	return outputBuffer_.writeFd(fd_,savedError);
 }
 void HttpRequest::appendReponse(const Buffer& buffer) {
 	outputBuffer_.append(buffer);
