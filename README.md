@@ -8,7 +8,7 @@ a tiny http server
  - Reactor模型
  - 多路复用
  - 支持HTTP长连接
- - 可自动增长的缓冲区（参考了muduo的buffer）
+ - 可自动增长的缓冲区
  - 基于priority_queue与shared_prt的应用层定时器
 
 NOW CODING
@@ -25,3 +25,12 @@ NOW CODING
 - [X] Buffer
 
 - [X] Timer
+
+Class
+- Epoll:封装epoll
+- Thread Pool:轻量线程池
+- Http Server:管理线程池，定时器，并分配任务
+- Http Request:解析http请求报文
+- Http Respone:响应http请求
+- Buffer:缓存区类（参考了muduo的buffer）
+- Timer:基于优先队列的应用层定时器
