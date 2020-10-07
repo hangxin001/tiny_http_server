@@ -6,8 +6,8 @@ a tiny http server
 
 特性：
  - Reactor模型
- - 多路复用
- - 支持HTTP长连接
+ - 基于epoll的多路复用
+ - 支持Get,Post,Head三种请求方法，同时支持浏览缓存（IMS头）
  - 可自动增长的缓冲区
  - 基于priority_queue与shared_prt的应用层定时器
 
@@ -20,7 +20,7 @@ NOW CODING
 
 - [X] Http Request
 
-- [ ] Http Respone
+- [X] Http Respone
 
 - [X] Buffer
 
