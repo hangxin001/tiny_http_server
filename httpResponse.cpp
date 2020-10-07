@@ -69,7 +69,7 @@ off_t HttpResponse::fileIsOK(std::string path){
     
 };
 void HttpResponse::doNotModifiedResponse(Buffer& outBuffer){
-    statusCode_ = 403;
+    statusCode_ = 304;
     outBuffer.retrieveAll();
     appendResponseLine(outBuffer);
     outBuffer.append("Date:" + nowTime() + "\r\n");
@@ -211,6 +211,6 @@ Buffer HttpResponse::makeResponse(){
 void HttpResponse::doStaticResponse(Buffer& buffer, off_t fileSize){
     appendResponseLine(buffer);
     appendResponseHeader(buffer,fileSize);
-    if(!(statusCode_ == 403 || requestMethod_ == "HEAD"))
+    if(!(statusCode_ == 304 || requestMethod_ == "HEAD"))
         appendResponseBody(buffer,fileSize);
 };
