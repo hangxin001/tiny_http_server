@@ -23,14 +23,14 @@ public:
 	};
 	HttpRequest(int fd);
 	~HttpRequest();
-	int recv(int* savedError);		//����inBuffer����
-	int send(int* savedError);		//����outBuffer����
+	int recv(int* savedError);		//接收inBuffer数据
+	int send(int* savedError);		//发送outBuffer数据
 	void appendReponse(const Buffer& buffer);
 	void appendInBuffer(const std::string& str);
 	bool parseRequest();
 	bool parseRequestLine();
 	bool parseRequestHead();
-	bool parseRequestQuery();	//��Ȼ��������û��CGI֮��Ľ������Ժ��л��Ჹ��
+	bool parseRequestQuery();	//虽然处理，但没用CGI之类的解析。以后有机会补上
 	bool keepAlive();
 	void resetParse();
 
@@ -76,8 +76,8 @@ private:
 	RequestParseStatus parseStatus_;
 	Method method_;
 	Version version_;
-	std::string path_;	//����url
-	std::string query_;	//����
+	std::string path_;	//请求url
+	std::string query_;	//参数
 	std::unordered_map<std::string, std::string> headers_;
 
 };

@@ -23,7 +23,7 @@ bool HttpRequest::parseRequestLine() {
 	const char* crlf = inputBuffer_.findCRLF();
 	const char* firstSpace = std::search(inputBuffer_.peek(), crlf, SPACE,SPACE+1);
 	const char* secondSpace = std::search(firstSpace + 1, crlf, SPACE, SPACE+1);
-	if (firstSpace == crlf || secondSpace == crlf) {	//http�����б��������ո�ָ�
+	if (firstSpace == crlf || secondSpace == crlf) {	//http请求行必有两个空格分隔
 		method_ = Invaild;
 		return false;
 	}
@@ -39,9 +39,9 @@ bool HttpRequest::parseRequestLine() {
 	else
 		method_ = Invaild;
 
-	path_ = std::string(firstSpace + 1, secondSpace);	//����url
+	path_ = std::string(firstSpace + 1, secondSpace);	//处理url
 
-	if (std::equal(secondSpace + 1, crlf, "HTTP/1.1"))	//����httpVersion
+	if (std::equal(secondSpace + 1, crlf, "HTTP/1.1"))	//处理httpVersion
 		version_ = HTTP11;
 	else if (std::equal(secondSpace + 1, crlf, "HTTP/1.0"))
 		version_ = HTTP10;
@@ -51,11 +51,11 @@ bool HttpRequest::parseRequestLine() {
 	parseStatus_ = RequestHead;
 	return true;
 }
-bool HttpRequest::parseRequestHead() {		//����std::string������������Ŀ��ɺ���һ�Դ���string��Ч�����
+bool HttpRequest::parseRequestHead() {		//处理std::string不香吗？整个项目完成后试一试处理string的效率如何
 	const char* COLON = ":";
 	while (1) {			
 		const char* crlf = inputBuffer_.findCRLF();
-		if ( crlf == nullptr) {		//ֱ���Ҳ���crlf�������
+		if ( crlf == nullptr) {		//ֱ直到找不到crlf则结束。
 			break;
 		}
 		const char* colon = std::search(inputBuffer_.peek(), crlf, COLON, COLON + 1);
@@ -69,7 +69,7 @@ bool HttpRequest::parseRequestHead() {		//����std::string�����
 	return true;
 }
 bool HttpRequest::parseRequestQuery() {
-	if (method_ == Get || method_ == Head) {		//����Get��query
+	if (method_ == Get || method_ == Head) {		//处理Get的query
 		std::string::size_type quest = path_.find('?');	
 		if (quest != path_.npos) {
 			query_.assign(path_, quest + 1, path_.length() - 1);
