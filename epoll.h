@@ -13,8 +13,8 @@ public:
 	~Epoll();
 	using NewConnetCallback = std::function<void()>;
 	using CloseConnetCallback = std::function<void(HttpRequest* httpRequest)>;
-	using HandleInCallback = std::function<void(HttpRequest* httpRequest)>;		//����EPOLLIN
-	using HandleOutCallback = std::function<void(HttpRequest* httpRequest)>;	//����EPOLLOUT
+	using HandleInCallback = std::function<void(HttpRequest* httpRequest)>;		//处理EPOLLIN
+	using HandleOutCallback = std::function<void(HttpRequest* httpRequest)>;	//处理EPOLLOUT
 	int add(int fd, int events, void* ptr);
 	int del(int fd, int events, void* ptr);
 	int mod(int fd, int events, void* ptr);
@@ -27,7 +27,7 @@ public:
 
 private:
 	int epollFd_;
-	std::vector<epoll_event> eventList_;	//vector��֤�����������ݵ������ָ�벻��ʧЧ
+	std::vector<epoll_event> eventList_;	//vector保证连续，不扩容的情况下指针不会失效
 
 	NewConnetCallback newConnetCallback_;
 	CloseConnetCallback closeConnetCallback_;
