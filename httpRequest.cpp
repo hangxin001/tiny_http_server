@@ -2,6 +2,10 @@
 HttpRequest::HttpRequest(int fd) : fd_(fd), working_(false), timer_(nullptr), version_(unKnown),
 method_(Invaild), parseStatus_(RequestLine) {};
 
+HttpRequest::~HttpRequest(){
+	close(fd_);
+}
+
 int HttpRequest::recv(int* savedError) {
 	return inputBuffer_.readFd(fd_,savedError);
 }
@@ -19,7 +23,7 @@ bool HttpRequest::parseRequestLine() {
 	const char* crlf = inputBuffer_.findCRLF();
 	const char* firstSpace = std::search(inputBuffer_.peek(), crlf, SPACE,SPACE+1);
 	const char* secondSpace = std::search(firstSpace + 1, crlf, SPACE, SPACE+1);
-	if (firstSpace == crlf || secondSpace == crlf) {	//httpÇëÇóÐÐ±ØÓÐÁ½¸ö¿Õ¸ñ·Ö¸ô
+	if (firstSpace == crlf || secondSpace == crlf) {	//httpï¿½ï¿½ï¿½ï¿½ï¿½Ð±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Õ¸ï¿½Ö¸ï¿½
 		method_ = Invaild;
 		return false;
 	}
@@ -35,9 +39,9 @@ bool HttpRequest::parseRequestLine() {
 	else
 		method_ = Invaild;
 
-	path_ = std::string(firstSpace + 1, secondSpace);	//´¦Àíurl
+	path_ = std::string(firstSpace + 1, secondSpace);	//ï¿½ï¿½ï¿½ï¿½url
 
-	if (std::equal(secondSpace + 1, crlf, "HTTP/1.1"))	//´¦ÀíhttpVersion
+	if (std::equal(secondSpace + 1, crlf, "HTTP/1.1"))	//ï¿½ï¿½ï¿½ï¿½httpVersion
 		version_ = HTTP11;
 	else if (std::equal(secondSpace + 1, crlf, "HTTP/1.0"))
 		version_ = HTTP10;
@@ -47,11 +51,11 @@ bool HttpRequest::parseRequestLine() {
 	parseStatus_ = RequestHead;
 	return true;
 }
-bool HttpRequest::parseRequestHead() {		//´¦Àístd::string²»ÏãÂð£¿Õû¸öÏîÄ¿Íê³ÉºóÊÔÒ»ÊÔ´¦ÀístringµÄÐ§ÂÊÈçºÎ
+bool HttpRequest::parseRequestHead() {		//ï¿½ï¿½ï¿½ï¿½std::stringï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¿ï¿½ï¿½Éºï¿½ï¿½ï¿½Ò»ï¿½Ô´ï¿½ï¿½ï¿½stringï¿½ï¿½Ð§ï¿½ï¿½ï¿½ï¿½ï¿½
 	const char* COLON = ":";
 	while (1) {			
 		const char* crlf = inputBuffer_.findCRLF();
-		if ( crlf == nullptr) {		//Ö±µ½ÕÒ²»µ½crlfÔò½áÊø¡£
+		if ( crlf == nullptr) {		//Ö±ï¿½ï¿½ï¿½Ò²ï¿½ï¿½ï¿½crlfï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 			break;
 		}
 		const char* colon = std::search(inputBuffer_.peek(), crlf, COLON, COLON + 1);
@@ -65,7 +69,7 @@ bool HttpRequest::parseRequestHead() {		//´¦Àístd::string²»ÏãÂð£¿Õû¸öÏîÄ¿Íê³ÉºóÊ
 	return true;
 }
 bool HttpRequest::parseRequestQuery() {
-	if (method_ == Get || method_ == Head) {		//´¦ÀíGetµÄquery
+	if (method_ == Get || method_ == Head) {		//ï¿½ï¿½ï¿½ï¿½Getï¿½ï¿½query
 		std::string::size_type quest = path_.find('?');	
 		if (quest != path_.npos) {
 			query_.assign(path_, quest + 1, path_.length() - 1);

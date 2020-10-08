@@ -22,14 +22,15 @@ public:
 		HTTP11
 	};
 	HttpRequest(int fd);
-	int recv(int* savedError);		//½ÓÊÕinBufferÊý¾Ý
-	int send(int* savedError);		//·¢ËÍoutBufferÊý¾Ý
+	~HttpRequest();
+	int recv(int* savedError);		//ï¿½ï¿½ï¿½ï¿½inBufferï¿½ï¿½ï¿½ï¿½
+	int send(int* savedError);		//ï¿½ï¿½ï¿½ï¿½outBufferï¿½ï¿½ï¿½ï¿½
 	void appendReponse(const Buffer& buffer);
 	void appendInBuffer(const std::string& str);
 	bool parseRequest();
 	bool parseRequestLine();
 	bool parseRequestHead();
-	bool parseRequestQuery();	//ËäÈ»´¦Àí£¬µ«Ã»ÓÃCGIÖ®ÀàµÄ½âÎö¡£ÒÔºóÓÐ»ú»á²¹ÉÏ
+	bool parseRequestQuery();	//ï¿½ï¿½È»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ã»ï¿½ï¿½CGIÖ®ï¿½ï¿½Ä½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ôºï¿½ï¿½Ð»ï¿½ï¿½á²¹ï¿½ï¿½
 	bool keepAlive();
 	void resetParse();
 
@@ -75,8 +76,8 @@ private:
 	RequestParseStatus parseStatus_;
 	Method method_;
 	Version version_;
-	std::string path_;	//ÇëÇóurl
-	std::string query_;	//²ÎÊý
+	std::string path_;	//ï¿½ï¿½ï¿½ï¿½url
+	std::string query_;	//ï¿½ï¿½ï¿½ï¿½
 	std::unordered_map<std::string, std::string> headers_;
 
 };
