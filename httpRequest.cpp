@@ -38,8 +38,9 @@ bool HttpRequest::parseRequestLine() {
 	}
 	else
 		method_ = Invaild;
-
-	path_ = std::string(firstSpace + 1, secondSpace);	//处理url
+	path_ = std::string("./www");	//文件目录
+	path_.append(firstSpace+1,secondSpace);	//先放./www
+	//path_ = std::string(firstSpace + 1, secondSpace);	//处理url
 
 	if (std::equal(secondSpace + 1, crlf, "HTTP/1.1"))	//处理httpVersion
 		version_ = HTTP11;
@@ -104,7 +105,6 @@ bool HttpRequest::keepAlive() {
 	if (alive != headers_.end()) {
 		str = alive->second;
 	}
-	bool test = (method_ == HTTP11);
 	if ( str == "Keep-Alive" || (version_ == HTTP11 && str != "close"))
 		return true;
 	return false;

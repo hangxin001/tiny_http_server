@@ -13,13 +13,13 @@ public:
 	~Epoll();
 	using NewConnetCallback = std::function<void()>;
 	using CloseConnetCallback = std::function<void(HttpRequest* httpRequest)>;
-	using HandleInCallback = std::function<void(HttpRequest* httpRequest)>;		//´¦ÀíEPOLLIN
-	using HandleOutCallback = std::function<void(HttpRequest* httpRequest)>;	//´¦ÀíEPOLLOUT
+	using HandleInCallback = std::function<void(HttpRequest* httpRequest)>;		//ï¿½ï¿½ï¿½ï¿½EPOLLIN
+	using HandleOutCallback = std::function<void(HttpRequest* httpRequest)>;	//ï¿½ï¿½ï¿½ï¿½EPOLLOUT
 	int add(int fd, int events, void* ptr);
 	int del(int fd, int events, void* ptr);
 	int mod(int fd, int events, void* ptr);
-	int wait(int timeOut);	//µ¥Î»ÎªMS
-	void eventTrick(int fd,ThreadPool& T,int eventsSum);
+	int wait(int timeOut);	//å•ä½MS
+	void eventTrick(int fd,std::shared_ptr<ThreadPool>T,int eventsSum);
 	void setNewConnectCallback(const NewConnetCallback& fun);
 	void setCloseConnetCallback(const CloseConnetCallback& fun);
 	void setHandleInCallback(const HandleInCallback& fun);
@@ -27,7 +27,7 @@ public:
 
 private:
 	int epollFd_;
-	std::vector<epoll_event> eventList_;	//vector±£Ö¤Á¬Ğø£¬²»À©ÈİµÄÇé¿öÏÂÖ¸Õë²»»áÊ§Ğ§
+	std::vector<epoll_event> eventList_;	//vectorï¿½ï¿½Ö¤ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½İµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö¸ï¿½ë²»ï¿½ï¿½Ê§Ğ§
 
 	NewConnetCallback newConnetCallback_;
 	CloseConnetCallback closeConnetCallback_;

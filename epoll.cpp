@@ -44,22 +44,24 @@ void Epoll::setHandleInCallback(const HandleInCallback& fun) {
 void Epoll::setHandleOutCallback(const HandleOutCallback& fun) {
 	epolloutCallback_ = fun;
 }
-void Epoll::eventTrick(int serverFd, ThreadPool& T, int eventsSum) {
+void Epoll::eventTrick(int serverFd, std::shared_ptr<ThreadPool> T, int eventsSum) {
 	for (int i = 0; i < eventsSum; ++i) {
 		HttpRequest* reRequest = static_cast<HttpRequest*>(eventList_[i].data.ptr);
 
-		if (reRequest->getFd() == serverFd)  //ÐÂÁ¬½Ó
-			newConnetCallback_();
+		if (reRequest->getFd() == serverFd)  //æ–°è¿žæŽ¥
+			T->joinJob(newConnetCallback_);
 		else if (
 			(eventList_[i].events & EPOLLHUP) ||
 			(eventList_[i].events & EPOLLERR)){
-			closeConnetCallback_(reRequest);
+			T->joinJob(std::bind(closeConnetCallback_,reRequest));
 		}
 		else if (eventList_[i].events & EPOLLIN) {
-			epollinCallback_(reRequest);
+			reRequest->setWorking(true);
+			T->joinJob(std::bind(epollinCallback_,reRequest));
 		}
 		else if (eventList_[i].events & EPOLLOUT) {
-			epolloutCallback_(reRequest);
+			reRequest->setWorking(true);
+			T->joinJob(std::bind(epolloutCallback_,reRequest));
 		}
 		else {
 			//debug

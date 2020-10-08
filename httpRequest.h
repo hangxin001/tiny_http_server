@@ -37,8 +37,14 @@ public:
 	int getFd() {
 		return fd_;
 	}
-	Method getMethod() const{
-		return method_;
+	std::string getMethod() const{
+		if(method_ == Get)
+			return std::string("GET");
+		else if(method_ == Post)
+			return std::string("POST");
+		else if(method_ == Head)
+			return std::string("HEAD");
+		return std::string("INVAILD");
 	}
 	Version getVersion() const {
 		return version_;

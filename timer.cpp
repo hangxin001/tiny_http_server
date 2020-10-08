@@ -1,4 +1,5 @@
 #include"timer.h"
+#include<iostream>
 std::shared_ptr<Timer> TimerManager::addTimer(const int& time, TimeOutFuction timeOutFun) {
 	std::shared_ptr<Timer> timer = std::make_shared<Timer>(nowTime_ + MS(time), timeOutFun);
 	{
@@ -13,7 +14,7 @@ void TimerManager::delTimer(std::shared_ptr<Timer> timer) {
 		return;
 	}
 	{
-		std::unique_lock<std::mutex> lock(lock_);	//应该可以不用上锁，不过先上个锁看看
+		//std::unique_lock<std::mutex> lock(lock_);	//上锁会卡死
 		timer->setUsed(false);
 	}
 }
@@ -30,9 +31,9 @@ void TimerManager::tick() {
 				mangerQueue_.pop();
 				continue;
 			}
-			if (std::chrono::duration_cast<MS>(mangerQueue_.top()->getExpireTime() - nowTime_).count() > 0)   //没有超时
+			if (std::chrono::duration_cast<MS>(mangerQueue_.top()->getExpireTime() - nowTime_).count() > 0){   //没有超时
 				return;
-
+			}
 			mangerQueue_.top()->runTimeOutFunction();
 			mangerQueue_.pop();
 		}
