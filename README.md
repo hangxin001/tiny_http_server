@@ -11,12 +11,12 @@ a tiny http server
  - 可自动增长的缓冲区
  - 基于priority_queue与shared_prt的应用层定时器
 
-NOW CODING
+NOW TESTING
 - [X] Epoll
 
 - [X] Thread Pool
 
-- [ ] Http Server
+- [X] Http Server
 
 - [X] Http Request
 

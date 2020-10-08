@@ -41,7 +41,7 @@ ssize_t Buffer::writeFd(int fd, int* savedError){
     }
 }  
 /*
-ssize_t Buffer::readFd(int fd , int* savedError){   //如果读就要全部读完，配合Epoll的ET模式
+ssize_t Buffer::readFd(int fd , int* savedError){   //如果读就要全部读完，配合Epoll的ET模式,有BUG
     ssize_t n = 0;
     char extrabuff[65536];
     iovec iov[2];
