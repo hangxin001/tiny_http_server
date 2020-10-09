@@ -34,7 +34,8 @@ public:
 		return writerIndex_ - readIndex_;
 	}
 	size_t writrableBytes() const {		//可写空间数量
-		return buffer_.size() - writerIndex_;
+		size_t t = buffer_.size() - static_cast<size_t>(writerIndex_);
+		return t;
 	}
 	size_t prependableBytes() const {		//很棒的想法，可惜这个项目用不上
 		return readIndex_;
@@ -130,7 +131,7 @@ private:
 	}
 	void makeSpace(size_t length) {
 		if (writrableBytes() + prependableBytes() < length + CHEAP_PREPEND) {
-			buffer_.resize(length + writrableBytes());
+			buffer_.resize(length + writerIndex_);
 		}
 		else {  //将以读过的数据覆盖。
 			size_t readable = readableBytes();

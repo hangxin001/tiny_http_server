@@ -36,4 +36,3 @@ Class
 
 Bug
 - HTTP代码304，TTFB时间无论什么情况都会固定在500ms，可能是HttpResponse类中处理If-Modified-Since有问题，但是其他方法都正常
-- 发送大文件时，会有原本不存在的数据产生，经过diff查看发现产生在文件中后段，怀疑是Buffer自动扩容或在是Buffer中write有问题
