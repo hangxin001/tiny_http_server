@@ -77,40 +77,43 @@ void HttpServer::newConnetion(){
         request->setTimer(requestTimer);    //设置定时器
         // 注册连接套接字到epoll
         epoll_ -> add(acceptFd, (EPOLLIN | EPOLLONESHOT), request);
-        std::cout << "new connection"<< std::endl;
-        openFd_++;
     }
 }
 void HttpServer::closeConnetion(HttpRequest* httpRequest){
-    std::cout << "close connection"<< std::endl;
     int closeFd = httpRequest->getFd();
     if(httpRequest->isWorking()){    //在读写不可被关闭
-        timerManager_->delTimer(httpRequest->getTimer());   
+        //timerManager_->delTimer(httpRequest->getTimer());   
         return;
     }
     timerManager_->delTimer(httpRequest->getTimer());
     epoll_->del(closeFd,0,httpRequest);
     delete httpRequest; //HttpRequest析构会close（fd）
     httpRequest = nullptr;
-    //debug
-    closeFd_++;
     
 }
 void HttpServer::handleRequest(HttpRequest* httpRequest){   //LT
+    //debug
+
     timerManager_->delTimer(httpRequest->getTimer());
     int errorCode;
+    httpRequest->setWorking(true);
     int nRead = httpRequest->recv(&errorCode);
-
     if(nRead == 0 || (nRead <0 && errorCode != EAGAIN)){ //断开
         httpRequest->setWorking(false);
         closeConnetion(httpRequest);
         return;
     }
+    if(nRead < 0  &&  errorCode==EAGAIN){
+        std::shared_ptr<Timer> requestTimer = timerManager_->addTimer(TIMEOUT,std::bind(&HttpServer::closeConnetion,this,httpRequest));
+        httpRequest->setTimer(requestTimer);    //设置定时器
+        epoll_->mod(httpRequest->getFd(),( EPOLLOUT | EPOLLIN | EPOLLONESHOT),httpRequest);
+    }
 
     httpRequest->parseRequest();    //解析报文，然后将返回信息写入缓冲区
     HttpResponse httpResponse(200,httpRequest->getPath(),httpRequest->getMethod(),httpRequest->getHeaders(),httpRequest->keepAlive());
     httpRequest->appendReponse(httpResponse.makeResponse());
-    epoll_->mod(httpRequest->getFd(),(EPOLLIN | EPOLLOUT | EPOLLONESHOT),httpRequest);
+    epoll_->mod(httpRequest->getFd(),( EPOLLOUT | EPOLLIN | EPOLLONESHOT),httpRequest);
+
 }
 void HttpServer::handleResponse(HttpRequest* httpRequest){
     timerManager_->delTimer(httpRequest->getTimer());
@@ -128,7 +131,7 @@ void HttpServer::handleResponse(HttpRequest* httpRequest){
     }
     std::shared_ptr<Timer> requestTimer = timerManager_->addTimer(TIMEOUT,std::bind(&HttpServer::closeConnetion,this,httpRequest));
     httpRequest->setTimer(requestTimer);    //设置定时器
-    epoll_ -> add(httpRequest->getFd(), (EPOLLIN | EPOLLONESHOT ), httpRequest);
+    epoll_ -> add(httpRequest->getFd(), (EPOLLIN | EPOLLOUT |EPOLLONESHOT ), httpRequest);
     httpRequest->setWorking(false);
 }
 void HttpServer::run(){
@@ -142,7 +145,6 @@ void HttpServer::run(){
         int time = timerManager_->getExpireTime();
         int events = epoll_->wait(time);
         //perror("");
-        std::cout << openFd_ <<" "<<closeFd_<<std::endl;
         if(events > 0){
             epoll_->eventTrick(serverFd_,threadpool_,events);
             

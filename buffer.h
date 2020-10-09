@@ -105,7 +105,7 @@ public:
 		writerIndex_ += length;
 	}
 	void ensureWriterableBytes(size_t length){
-		if(length < writrableBytes())
+		if(length > writrableBytes())
 			makeSpace(length);
 	}
 	void append(const char* str, size_t length){

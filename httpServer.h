@@ -6,6 +6,7 @@
 #include"httpResponse.h"
 #include"buffer.h"
 #include<memory>
+#include<chrono>
 class HttpServer{
 public:
     const int MAXLISTEN = 4096;
@@ -36,9 +37,5 @@ private:
     EpollPtr epoll_;
     TimerManagerPtr timerManager_;
     ThreadPoolPtr threadpool_;
-
-    //debug
-    int openFd_=0;
-    int closeFd_=0;
 };
 
