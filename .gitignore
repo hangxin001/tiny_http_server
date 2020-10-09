@@ -346,6 +346,10 @@ healthchecksdb
 bin/
 obj/
 .vs/
-
+.vscode/*
 # Test File
 test.*
+test.cpp
+www/*
+www
+testTool

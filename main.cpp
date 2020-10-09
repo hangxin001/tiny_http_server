@@ -1,6 +1,12 @@
 #include"httpServer.h"
-int main(){
+#include<cstring>
+int main(int argc, char** argv){
+    std::string ip = "127.0.0.1";
+    int port = 33333;
+    if(argc == 2){
+        ip = std::string(*(argv+1),strlen(*(argv+1)));
+    }
 
-    HttpServer server("127.0.0.1",33333,6);
+    HttpServer server(ip,port,6);
     server.run();
 }
