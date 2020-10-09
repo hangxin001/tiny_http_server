@@ -22,5 +22,18 @@ Class
 - Buffer:缓存区类（参考了muduo的buffer）
 - Timer:基于优先队列的应用层定时器
 
+压力测试
+- webbunch 10k 通过
+- 由于webbunch最大支持3万并发，无法测试c100k
+
+硬件环境：
+- I7 9400f
+- RAM 16G
+软件环境
+- gentoo
+- g++ 10.2
+- LinuxKernel 5.8
+
 Bug
-- HTTP代码304，TTFB时间过长，可能是HttpResponse类中处理If-Modified-Since有问题，但是其他都正常
+- HTTP代码304，TTFB时间无论什么情况都会固定在500ms，可能是HttpResponse类中处理If-Modified-Since有问题，但是其他方法都正常
+- 发送大文件时，会有原本不存在的数据产生，经过diff查看发现产生在文件中后段，怀疑是Buffer自动扩容或在是Buffer中write有问题
