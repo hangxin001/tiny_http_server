@@ -83,7 +83,7 @@ void HttpResponse::appendResponseHeader(Buffer& outBuffer, off_t fileSize){     
     outBuffer.append("Date:" + nowTime() + "\r\n");
     outBuffer.append("Server:Tiny_Http_Server\r\n");
     //  304处理时间过长，需要排查
-    if(!requestHeader_.empty()){    //处理If-Modified-Since
+    /*if(!requestHeader_.empty()){    //处理If-Modified-Since
     
         auto it = requestHeader_.find("If-Modified-Since");
         if(it!=requestHeader_.end()){
@@ -101,7 +101,7 @@ void HttpResponse::appendResponseHeader(Buffer& outBuffer, off_t fileSize){     
                 return;
             }
         }
-    }
+    }*/
     
     {
     struct stat stauts;     //加入Last-Modified

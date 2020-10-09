@@ -1,6 +1,6 @@
 #include"buffer.h"
 #include<error.h>
-
+#include<sys/socket.h>
 ssize_t Buffer::readFd(int fd , int* savedError){   //配合Epoll的LT模式
     char extrabuff[65536];
     iovec iov[2];
@@ -27,7 +27,16 @@ ssize_t Buffer::readFd(int fd , int* savedError){   //配合Epoll的LT模式
 }
 ssize_t Buffer::writeFd(int fd, int* savedError){
     ssize_t n;
-    n = write(fd,begin()+readIndex_,readableBytes());
+    ssize_t nowWrite = 0;
+    ssize_t totalWrite = readableBytes();
+    while(nowWrite <totalWrite){
+        n = send(fd,begin()+readIndex_,readableBytes(),0);
+        if(n == -1 && errno != EAGAIN)
+            break;
+        readIndex_ += static_cast<size_t>(n);
+        nowWrite +=n;
+    }
+
     if(n < 0 && n == EINTR){
         return 0;
     }
@@ -35,8 +44,5 @@ ssize_t Buffer::writeFd(int fd, int* savedError){
         perror("Buffer write error:");
         *savedError = errno;
     }
-    else{
-        readIndex_ += static_cast<size_t>(n);
-        return n;
-    }
+    return n;
 }  
