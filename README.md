@@ -35,4 +35,5 @@ Class
 - LinuxKernel 5.8
 
 Bug
-- HTTP代码304，TTFB时间无论什么情况都会固定在500ms，可能是HttpResponse类中处理If-Modified-Since有问题，但是其他方法都正常
+- Not Modified报文，TTFB时间无论什么情况都会固定在500ms。
+原因：chrome计算TTFB时间方式的不同。首先服务器设定500ms是主动断开时间。同过抓包就能发现回应报文时间正常。但chrome收到服务端的Not Modified(304)报文后并没有结束计时。而是继续记时。直到tcp连接关闭，由于服务端设置500ms后超时主动关闭连接，所以TTFB时间会固定在500ms。但是在get的情况不下就不一样，chrome不会等待到tcp流的关闭，而是只要收到相应的数据就停止计时。

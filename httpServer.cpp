@@ -89,10 +89,8 @@ void HttpServer::closeConnetion(HttpRequest* httpRequest){
     epoll_->del(closeFd,0,httpRequest);
     delete httpRequest; //HttpRequest析构会close（fd）
     httpRequest = nullptr;
-    
 }
 void HttpServer::handleRequest(HttpRequest* httpRequest){   //LT
-    //debug
 
     timerManager_->delTimer(httpRequest->getTimer());
     int errorCode;

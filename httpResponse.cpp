@@ -82,12 +82,10 @@ void HttpResponse::appendResponseLine(Buffer& outBuffer){
 void HttpResponse::appendResponseHeader(Buffer& outBuffer, off_t fileSize){     //迟早要重构，写的太难受了
     outBuffer.append("Date:" + nowTime() + "\r\n");
     outBuffer.append("Server:Tiny_Http_Server\r\n");
-    //  304处理时间过长，需要排查
-    /*if(!requestHeader_.empty()){    //处理If-Modified-Since
-    
+    // 304处理时间固定为500ms是因为浏览器时间计算问题。
+    if(!requestHeader_.empty()){    //处理If-Modified-Since
         auto it = requestHeader_.find("If-Modified-Since");
         if(it!=requestHeader_.end()){
-            
             time_t lastTime;
             std::tm t_time ={};
             std::stringstream sstr(it->second);
@@ -101,7 +99,7 @@ void HttpResponse::appendResponseHeader(Buffer& outBuffer, off_t fileSize){     
                 return;
             }
         }
-    }*/
+    }
     
     {
     struct stat stauts;     //加入Last-Modified

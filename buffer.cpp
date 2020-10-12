@@ -3,6 +3,7 @@
 #include<sys/socket.h>
 ssize_t Buffer::readFd(int fd , int* savedError){   //如果读就要全部读完，
     ssize_t n = 0;
+    size_t nowRead = 0;
     char extrabuff[65536];
     iovec iov[2];
     while(1){  //巧用栈上空间
@@ -14,7 +15,7 @@ ssize_t Buffer::readFd(int fd , int* savedError){   //如果读就要全部读�
         n = readv(fd,iov,2);
         if(n <= 0)
             break;
-
+        nowRead += n;
         if ( n < writable)
         {
             hasWrite(static_cast<size_t>(n));
@@ -53,5 +54,5 @@ ssize_t Buffer::writeFd(int fd, int* savedError){
         perror("Buffer write error:");
         *savedError = errno;
     }
-    return n;
+    return nowWrite;
 }  
