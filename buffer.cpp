@@ -39,10 +39,10 @@ ssize_t Buffer::writeFd(int fd, int* savedError){
     ssize_t totalWrite = readableBytes();
     while(nowWrite <totalWrite){
         n = write(fd,begin()+readIndex_,readableBytes());
-        if(n == -1 && errno != EAGAIN)
+        if(n <= -1 && errno != EAGAIN)
             break;
         if( n<=0 && errno == EAGAIN)
-            continue;
+            break;
         readIndex_ += static_cast<size_t>(n);
         nowWrite +=n;
     }
