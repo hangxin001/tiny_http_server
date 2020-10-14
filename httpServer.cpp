@@ -111,6 +111,7 @@ void HttpServer::handleRequest(HttpRequest* httpRequest){   //LT
 void HttpServer::handleResponse(HttpRequest* httpRequest){
     timerManager_->delTimer(httpRequest->getTimer());
     int errorCode;
+
     int nWrite = httpRequest->send(&errorCode);
 
     if(nWrite == -1 && errorCode != EAGAIN){
@@ -124,8 +125,11 @@ void HttpServer::handleResponse(HttpRequest* httpRequest){
     }
     std::shared_ptr<Timer> requestTimer = timerManager_->addTimer(TIMEOUT,std::bind(&HttpServer::closeConnetion,this,httpRequest));
     httpRequest->setTimer(requestTimer);    //设置定时器
-    epoll_ -> add(httpRequest->getFd(), (EPOLLIN | EPOLLOUT |EPOLLET |EPOLLONESHOT ), httpRequest);
-    httpRequest->setWorking(false);
+    epoll_ -> mod(httpRequest->getFd(), (EPOLLIN | EPOLLOUT |EPOLLET |EPOLLONESHOT ), httpRequest);
+    if(errorCode == EAGAIN)
+        httpRequest->setWorking(true);
+    else
+        httpRequest->setWorking(false);
 }
 void HttpServer::run(){
     epoll_->add(serverFd_, (EPOLLIN | EPOLLET) ,serverRequest_.get());

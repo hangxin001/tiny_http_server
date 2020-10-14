@@ -38,7 +38,7 @@ ssize_t Buffer::writeFd(int fd, int* savedError){
     ssize_t nowWrite = 0;
     ssize_t totalWrite = readableBytes();
     while(nowWrite <totalWrite){
-        n = write(fd,begin()+readIndex_,readableBytes());
+        n = send(fd,begin()+readIndex_,readableBytes(), MSG_NOSIGNAL);
         if(n <= -1 && errno != EAGAIN)
             break;
         if( n<=0 && errno == EAGAIN)
@@ -47,10 +47,7 @@ ssize_t Buffer::writeFd(int fd, int* savedError){
         nowWrite +=n;
     }
 
-    if(n < 0 && n == EINTR){
-        return 0;
-    }
-    else if(n < 0){
+     if(n < 0 && errno != EAGAIN){
         perror("Buffer write error:");
         *savedError = errno;
     }
