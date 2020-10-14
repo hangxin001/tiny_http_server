@@ -50,6 +50,7 @@ ssize_t Buffer::writeFd(int fd, int* savedError){
      if(n < 0 && errno != EAGAIN){
         perror("Buffer write error:");
         *savedError = errno;
+        return -1;
     }
     return nowWrite;
 }  
